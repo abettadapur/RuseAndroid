@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="68dp"
+        android:id="@+id/slideHeader"/>
+
+    <View android:layout_width="fill_parent"
+        android:layout_height="2dip"
+        android:background="#5F000000"/>
+
+    <FrameLayout
+        android:animateLayoutChanges="true"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/slideContent"
+        android:layout_marginBottom="80dp"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:id="@+id/slideFooter"
+        android:layout_marginTop="-80dp"/>
+
+
+</LinearLayout>
