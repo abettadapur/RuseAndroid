@@ -7,10 +7,12 @@ import com.bettadapur.ruseandroid.ui.controls.NowPlayingControlsView;
 import com.bettadapur.ruseandroid.ui.controls.NowPlayingControlsView$$ViewBinder;
 import com.bettadapur.ruseandroid.ui.controls.NowPlayingQueueView;
 import com.bettadapur.ruseandroid.ui.controls.NowPlayingSummaryView;
+import com.bettadapur.ruseandroid.ui.fragments.ArtistDetailFragment;
 import com.bettadapur.ruseandroid.ui.fragments.NowPlayingFragment;
 import com.bettadapur.ruseandroid.ui.fragments.SearchFragment;
 import com.bettadapur.ruseandroid.ui.lists.adapters.AlbumAdapter;
 import com.bettadapur.ruseandroid.ui.lists.adapters.AlbumSongAdapter;
+import com.bettadapur.ruseandroid.ui.lists.adapters.ArtistAdapter;
 import com.bettadapur.ruseandroid.ui.lists.adapters.SongAdapter;
 import com.squareup.otto.Bus;
 
@@ -40,4 +42,8 @@ public interface ApplicationComponent
 
 
     void inject(AlbumSongAdapter albumSongAdapter);
+
+    void inject(ArtistAdapter artistAdapter);
+
+    void inject(ArtistDetailFragment artistDetailFragment);
 }

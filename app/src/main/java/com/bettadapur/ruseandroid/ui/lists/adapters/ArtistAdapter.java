@@ -9,7 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bettadapur.ruseandroid.R;
+import com.bettadapur.ruseandroid.dagger.ApplicationComponent;
+import com.bettadapur.ruseandroid.dagger.DaggerApplicationComponent;
+import com.bettadapur.ruseandroid.dagger.RuseModule;
+import com.bettadapur.ruseandroid.eventing.OpenArtistRequest;
 import com.bettadapur.ruseandroid.model.Album;
 import com.bettadapur.ruseandroid.model.Artist;
 import com.bettadapur.ruseandroid.net.RuseService;
@@ -57,6 +62,8 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder
     {
         mContext = context;
         mArtistList = items;
+        ApplicationComponent component = DaggerApplicationComponent.builder().ruseModule(new RuseModule(mContext)).build();
+        component.inject(this);
     }
 
     @Override
@@ -73,7 +80,14 @@ public class ArtistAdapter extends RecyclerView.Adapter<ArtistAdapter.ViewHolder
         holder.titleView.setText(artist.getName());
         Picasso.with(mContext).load(artist.getArtSrc()).into(holder.artView);
 
-        holder.container.setOnClickListener((v)->{/*Send open message*/});
+
+        holder.container.setOnClickListener((v)->{
+            MaterialDialog dialog = new MaterialDialog.Builder(mContext).title("Loading artist...").content("Loading...").progress(true, 0).show();
+            ruseService.getArtist(artist.getId()).subscribe((a)->
+            {
+                bus.post(new OpenArtistRequest(a, dialog));
+            });
+        });
     }
 
     @Override

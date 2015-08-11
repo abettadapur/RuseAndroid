@@ -7,6 +7,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
@@ -25,6 +28,8 @@ import com.bettadapur.ruseandroid.ui.lists.SongListFragment;
 import com.bettadapur.ruseandroid.ui.views.SearchChild;
 import com.bettadapur.ruseandroid.ui.views.SearchView;
 import com.hannesdorfmann.mosby.mvp.MvpFragment;
+import com.joanzapata.android.iconify.IconDrawable;
+import com.joanzapata.android.iconify.Iconify;
 import com.squareup.otto.Bus;
 
 
@@ -35,13 +40,16 @@ import butterknife.Bind;
 /**
  * Created by Alex on 8/7/2015.
  */
-public class SearchFragment extends MvpFragment<SearchView, SearchPresenter> implements SearchView
+public class SearchFragment extends MvpFragment<SearchView, SearchPresenter> implements SearchView, android.support.v7.widget.SearchView.OnQueryTextListener
 {
     @Bind(R.id.tabs)
     PagerSlidingTabStrip mTabStrip;
 
     @Bind(R.id.pager)
     ViewPager mViewPager;
+
+    @Bind(R.id.toolbar)
+    Toolbar toolbar;
 
     @Inject
     Bus bus;
@@ -53,6 +61,7 @@ public class SearchFragment extends MvpFragment<SearchView, SearchPresenter> imp
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //setHasOptionsMenu(true);
     }
 
     @Override
@@ -77,6 +86,21 @@ public class SearchFragment extends MvpFragment<SearchView, SearchPresenter> imp
         mViewPager.setAdapter(mPagerAdapter);
         mTabStrip.setViewPager(mViewPager);
         mViewPager.setCurrentItem(0);
+
+        toolbar.setTitle("RuseAndroid");
+        toolbar.inflateMenu(R.menu.menu_main);
+        Menu menu = toolbar.getMenu();
+        menu.findItem(R.id.search).setIcon(
+                new IconDrawable(getActivity(), Iconify.IconValue.fa_search)
+                        .color(0xFFFFFF)
+                        .actionBarSize());
+
+        android.support.v7.widget.SearchView searchView = (android.support.v7.widget.SearchView)menu.findItem(R.id.search).getActionView();
+
+        if(searchView!=null)
+        {
+            searchView.setOnQueryTextListener(this);
+        }
     }
 
     @Override
@@ -90,9 +114,8 @@ public class SearchFragment extends MvpFragment<SearchView, SearchPresenter> imp
         presenter.performSearch(query);
     }
     @Override
-    public void setResults(SearchResult result)
-    {
-        getActivity().runOnUiThread(()-> mPagerAdapter.setResults(result));
+    public void setResults(SearchResult result) {
+        getActivity().runOnUiThread(() -> mPagerAdapter.setResults(result));
     }
 
     @Override
@@ -109,6 +132,21 @@ public class SearchFragment extends MvpFragment<SearchView, SearchPresenter> imp
             mPagerAdapter.setLoading(loading);
         });
 
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        InputMethodManager inputManager =
+                (InputMethodManager)
+                        getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(this.getActivity().getCurrentFocus().getWindowToken(),0);
+        performSearch(query);
+        return true;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        return false;
     }
 
     private class SearchPagerAdapter extends FragmentPagerAdapter

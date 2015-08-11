@@ -16,6 +16,7 @@ import com.bettadapur.ruseandroid.dagger.ApplicationComponent;
 import com.bettadapur.ruseandroid.dagger.DaggerApplicationComponent;
 import com.bettadapur.ruseandroid.dagger.RuseModule;
 import com.bettadapur.ruseandroid.eventing.OpenAlbumRequest;
+import com.bettadapur.ruseandroid.eventing.OpenArtistRequest;
 import com.bettadapur.ruseandroid.ui.fragments.AlbumDetailFragment;
 import com.bettadapur.ruseandroid.ui.fragments.NowPlayingFragment;
 import com.bettadapur.ruseandroid.ui.fragments.SearchFragment;
@@ -32,9 +33,6 @@ import butterknife.Bind;
 
 public class MainActivity extends MosbyActivity implements SearchView.OnQueryTextListener {
 
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
-
     @Bind(R.id.slidingLayout)
     SlidingUpPanelLayout slidingLayout;
 
@@ -49,7 +47,6 @@ public class MainActivity extends MosbyActivity implements SearchView.OnQueryTex
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setSupportActionBar(toolbar);
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
@@ -96,26 +93,6 @@ public class MainActivity extends MosbyActivity implements SearchView.OnQueryTex
             }
         });
 
-    }
-
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        menu.findItem(R.id.search).setIcon(
-                new IconDrawable(this, Iconify.IconValue.fa_search)
-                        .color(0xFFFFFF)
-                        .actionBarSize());
-
-        android.support.v7.widget.SearchView view = (android.support.v7.widget.SearchView)menu.findItem(R.id.search).getActionView();
-
-        if(view!=null)
-        {
-            view.setOnQueryTextListener(this);
-        }
-
-        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -168,8 +145,16 @@ public class MainActivity extends MosbyActivity implements SearchView.OnQueryTex
                     .replace(R.id.fragmentContainer, albumDetailFragment)
                     .addToBackStack("")
                     .commit();
-            toolbar.setVisibility(View.GONE);
+            //toolbar.setVisibility(View.GONE);
 
+        });
+    }
+
+    @Subscribe public void onOpenArtist(OpenArtistRequest request)
+    {
+        runOnUiThread(()->{
+            request.getDialog().hide();
+            Log.i("MainActivity", "Opening artist " + request.getArtist().getName());
         });
     }
 

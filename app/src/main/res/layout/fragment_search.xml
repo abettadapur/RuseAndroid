@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:theme="@style/ToolBarStyle"
+        android:background="@color/primaryColor"
+        android:id="@+id/toolbar"
+        android:elevation="4dp"
+        />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:layout_below="@id/toolbar">
 
     <com.astuetz.PagerSlidingTabStrip
         android:id="@+id/tabs"
@@ -19,5 +34,6 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         tools:context=".view/SearchFragment"/>
+    </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

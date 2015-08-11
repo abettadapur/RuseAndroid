@@ -1,9 +1,11 @@
 package com.bettadapur.ruseandroid.ui.fragments;
 
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ImageView;
@@ -116,7 +118,13 @@ public class AlbumDetailFragment extends MvpFragment<AlbumDetailView, AlbumDetai
 
         mFlexibleSpaceImageHeight = getResources().getDimensionPixelSize(R.dimen.flexible_space_image_height);
         mFlexibleSpaceShowFabOffset = getResources().getDimensionPixelSize(R.dimen.flexible_space_show_fab_offset);
-        mActionBarSize = ((MainActivity)getActivity()).getSupportActionBar().getHeight();
+
+        TypedValue typedValue = new TypedValue();
+        int[] textSizeAttr = new int[] { android.R.attr.actionBarSize };
+        int indexOfAttrActionSize = 0;
+        TypedArray a = getActivity().obtainStyledAttributes(typedValue.data, textSizeAttr);
+        mActionBarSize = a.getDimensionPixelSize(indexOfAttrActionSize, 0);
+        a.recycle();
 
         mSongList.setScrollViewCallbacks(this);
 
@@ -147,7 +155,7 @@ public class AlbumDetailFragment extends MvpFragment<AlbumDetailView, AlbumDetai
     @Override
     public void onResume() {
         super.onResume();
-        ((MosbyActivity)getActivity()).getSupportActionBar().hide();
+      //  ((MosbyActivity)getActivity()).getSupportActionBar().hide();
         Handler handler = new Handler();
         handler.postDelayed(()->{onScrollChanged(1, true, false);/*showFab();*/},10);
         //handler.postDelayed(()->mSongList.smoothScrollBy(1, 1), 10);
@@ -157,7 +165,8 @@ public class AlbumDetailFragment extends MvpFragment<AlbumDetailView, AlbumDetai
     @Override
     public void onPause() {
         super.onPause();
-        ((MosbyActivity)getActivity()).getSupportActionBar().show();
+        //
+        // ((MosbyActivity)getActivity()).getSupportActionBar().show();
     }
 
     public void updateAlbum(Album a)
