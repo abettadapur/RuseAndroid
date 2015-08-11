@@ -9,7 +9,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bettadapur.ruseandroid.R;
+import com.bettadapur.ruseandroid.dagger.ApplicationComponent;
+import com.bettadapur.ruseandroid.dagger.DaggerApplicationComponent;
+import com.bettadapur.ruseandroid.dagger.RuseModule;
+import com.bettadapur.ruseandroid.eventing.OpenAlbumRequest;
 import com.bettadapur.ruseandroid.model.Album;
 import com.bettadapur.ruseandroid.net.RuseService;
 import com.squareup.otto.Bus;
@@ -58,6 +63,9 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
     {
         mContext = context;
         mAlbumList = items;
+        ApplicationComponent component = DaggerApplicationComponent.builder().ruseModule(new RuseModule(mContext)).build();
+        component.inject(this);
+        bus.register(this);
     }
 
     @Override
@@ -75,7 +83,16 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
         holder.artistView.setText(album.getArtistName());
         Picasso.with(mContext).load(album.getArtSrc()).into(holder.artView);
 
-        holder.container.setOnClickListener((v)->{/*Send open message*/});
+        holder.container.setOnClickListener((v)->
+        {
+
+            MaterialDialog dialog = new MaterialDialog.Builder(mContext).title("Loading album...").content("Loading...").progress(true, 0).show();
+            ruseService.getAlbum(album.getId()).subscribe((a)->
+            {
+                bus.post(new OpenAlbumRequest(a, dialog));
+            });
+
+        });
     }
 
     @Override

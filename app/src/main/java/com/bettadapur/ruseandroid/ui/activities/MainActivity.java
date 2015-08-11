@@ -5,12 +5,18 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 
 import com.bettadapur.ruseandroid.R;
+import com.bettadapur.ruseandroid.dagger.ApplicationComponent;
+import com.bettadapur.ruseandroid.dagger.DaggerApplicationComponent;
+import com.bettadapur.ruseandroid.dagger.RuseModule;
+import com.bettadapur.ruseandroid.eventing.OpenAlbumRequest;
+import com.bettadapur.ruseandroid.ui.fragments.AlbumDetailFragment;
 import com.bettadapur.ruseandroid.ui.fragments.NowPlayingFragment;
 import com.bettadapur.ruseandroid.ui.fragments.SearchFragment;
 import com.hannesdorfmann.mosby.MosbyActivity;
@@ -18,6 +24,7 @@ import com.joanzapata.android.iconify.IconDrawable;
 import com.joanzapata.android.iconify.Iconify;
 import com.sothree.slidinguppanel.SlidingUpPanelLayout;
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
@@ -36,6 +43,7 @@ public class MainActivity extends MosbyActivity implements SearchView.OnQueryTex
 
     private SearchFragment searchFragment;
     private NowPlayingFragment nowPlayingFragment;
+    private AlbumDetailFragment albumDetailFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,12 +53,15 @@ public class MainActivity extends MosbyActivity implements SearchView.OnQueryTex
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
-
+        ApplicationComponent component = DaggerApplicationComponent.builder().ruseModule(new RuseModule(this)).build();
+        component.inject(this);
+        bus.register(this);
 
         if(savedInstanceState == null)
         {
             searchFragment = new SearchFragment();
             nowPlayingFragment = new NowPlayingFragment();
+            albumDetailFragment = new AlbumDetailFragment();
 
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragmentContainer, searchFragment)
@@ -141,4 +152,26 @@ public class MainActivity extends MosbyActivity implements SearchView.OnQueryTex
     {
         slidingLayout.setDragView(v);
     }
+
+    @Subscribe public void onOpenAlbum(OpenAlbumRequest request)
+    {
+        //open album
+
+        runOnUiThread(()-> {
+            request.getDialog().hide();
+            Log.i("MainActivity", "Opening album " + request.getAlbum().getName());
+            albumDetailFragment.updateAlbum(request.getAlbum()); //updated album
+
+            //set fragment to main
+            getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_out, R.anim.fade_in)
+                    .replace(R.id.fragmentContainer, albumDetailFragment)
+                    .addToBackStack("")
+                    .commit();
+            toolbar.setVisibility(View.GONE);
+
+        });
+    }
+
+
 }

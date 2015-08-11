@@ -19,6 +19,7 @@ public class Song
     @SerializedName("vlcid")
     private int vlcId;
     private boolean current;
+    private int durationMillis;
 
     public Song()
     {}
@@ -94,4 +95,13 @@ public class Song
     public void setCurrent(boolean current) {
         this.current = current;
     }
+
+    public String getDuration()
+    {
+        long second = (durationMillis / 1000) % 60;
+        long minute = (durationMillis / (1000 * 60));
+        String time = String.format("%02d:%02d", minute, second);
+        return time;
+    }
+
 }
