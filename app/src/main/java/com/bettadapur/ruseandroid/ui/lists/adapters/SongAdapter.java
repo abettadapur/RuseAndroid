@@ -12,12 +12,17 @@ import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.bettadapur.ruseandroid.R;
 import com.bettadapur.ruseandroid.dagger.ApplicationComponent;
 import com.bettadapur.ruseandroid.dagger.DaggerApplicationComponent;
 import com.bettadapur.ruseandroid.dagger.RuseModule;
+import com.bettadapur.ruseandroid.eventing.OpenAlbumRequest;
+import com.bettadapur.ruseandroid.eventing.OpenArtistRequest;
 import com.bettadapur.ruseandroid.model.Song;
 import com.bettadapur.ruseandroid.net.RuseService;
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.SnackbarManager;
 import com.squareup.otto.Bus;
 import com.squareup.picasso.Picasso;
 
@@ -62,6 +67,9 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder>
     @Inject
     protected RuseService mRuseService;
 
+    @Inject
+    protected Bus bus;
+
     public SongAdapter(List<Song> items, Context context)
     {
         mSongList = items;
@@ -100,9 +108,25 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder>
                 {
                     case R.id.now:
                         mRuseService.playSong(song.getId());
+                        SnackbarManager.show(Snackbar.with(mContext).text("Now playing "+song.getTitle()));
                         break;
                     case R.id.last:
                         mRuseService.queueSong(song.getId());
+                        SnackbarManager.show(Snackbar.with(mContext).text("Added "+song.getTitle()+" to queue"));
+                        break;
+                    case R.id.album:
+                        MaterialDialog dialog = new MaterialDialog.Builder(mContext).title("Loading album...").content("Loading...").progress(true, 0).show();
+                        mRuseService.getAlbum(song.getAlbumId()).subscribe((a) ->
+                        {
+                            bus.post(new OpenAlbumRequest(a, dialog));
+                        });
+                        break;
+                    case R.id.artist:
+                        MaterialDialog dialog2 = new MaterialDialog.Builder(mContext).title("Loading artist...").content("Loading...").progress(true, 0).show();
+                        mRuseService.getArtist(song.getArtistId()).subscribe((a)->
+                        {
+                            bus.post(new OpenArtistRequest(a, dialog2));
+                        });
                         break;
                     default:
                         break;
@@ -111,8 +135,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder>
             });
             popupMenu.show();
         });
-        holder.container.setOnClickListener((v)->
-                mRuseService.playSong(song.getId()));
+        holder.container.setOnClickListener((v)-> {
+
+            mRuseService.playSong(song.getId());
+            SnackbarManager.show(Snackbar.with(mContext).text("Now playing "+song.getTitle()));
+        });
     }
 
     @Override

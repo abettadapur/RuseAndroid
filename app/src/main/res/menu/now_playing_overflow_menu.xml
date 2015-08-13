@@ -8,4 +8,12 @@
         android:id="@+id/delete"
         android:title="Remove from queue"/>
 
+    <item
+        android:id="@+id/album"
+        android:title="Go to album"/>
+
+    <item
+        android:id="@+id/artist"
+        android:title="Go to artist"/>
+
 </menu>  

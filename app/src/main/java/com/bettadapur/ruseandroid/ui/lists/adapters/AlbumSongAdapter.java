@@ -17,6 +17,8 @@ import com.bettadapur.ruseandroid.dagger.DaggerApplicationComponent;
 import com.bettadapur.ruseandroid.dagger.RuseModule;
 import com.bettadapur.ruseandroid.model.Song;
 import com.bettadapur.ruseandroid.net.RuseService;
+import com.nispok.snackbar.Snackbar;
+import com.nispok.snackbar.SnackbarManager;
 
 import java.util.List;
 
@@ -59,21 +61,27 @@ public class AlbumSongAdapter extends ArrayAdapter<Song>
         durationView.setText(song.getDuration());
         titleView.setText(song.getTitle());
 
-        container.setOnClickListener((view)-> ruseService.playSong(song.getId()));
+        //container.setOnClickListener((view)-> {
+        // ruseService.playSong(song.getId());
+        //SnackbarManager.show(Snackbar.with(mContext).text("Now playing "+song.getTitle()));
+        // }
+        // );
 
         overflowButton.setOnClickListener((button)->
         {
             PopupMenu popupMenu = new PopupMenu(mContext, button);
-            popupMenu.getMenuInflater().inflate(R.menu.search_song_overflow_menu, popupMenu.getMenu());
+            popupMenu.getMenuInflater().inflate(R.menu.album_song_overflow_menu, popupMenu.getMenu());
             popupMenu.setOnMenuItemClickListener((item)->
             {
                 switch(item.getItemId())
                 {
                     case R.id.now:
                         ruseService.playSong(song.getId());
+                        SnackbarManager.show(Snackbar.with(mContext).text("Now playing " + song.getTitle()));
                         break;
                     case R.id.last:
                         ruseService.queueSong(song.getId());
+                        SnackbarManager.show(Snackbar.with(mContext).text("Added "+song.getTitle()+" to queue"));
                         break;
                     default:
                         break;

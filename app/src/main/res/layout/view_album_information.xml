@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical"
+        >
+    <TextView
+        android:id="@+id/titleView"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:textSize="20sp"
+        android:textColor="@android:color/black"
+        android:text="To Pimp A Butterfly"/>
+
+    <!--android:textStyle="bold"-->
+
+
+
+        <TextView
+            android:id="@+id/artistView"
+            android:layout_marginTop="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:textColor="@android:color/black"
+            android:text="Kendrick Lamar"
+        />
+
+        <TextView
+            android:id="@+id/yearView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            android:text="2015  --  16 songs"/>
+
+
+    </LinearLayout>
+
+    <ImageButton
+        android:layout_width="40dp"
+        android:layout_height="35dp"
+        android:background="@android:color/transparent"
+        android:layout_gravity="bottom|end"
+        android:scaleType="fitCenter"
+        android:src="@drawable/ic_overflow"
+        android:id="@+id/overflowButton"/>
+
+</FrameLayout>

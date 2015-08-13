@@ -100,7 +100,7 @@ public class Song
     {
         long second = (durationMillis / 1000) % 60;
         long minute = (durationMillis / (1000 * 60));
-        String time = String.format("%02d:%02d", minute, second);
+        String time = String.format("%d:%02d", minute, second);
         return time;
     }
 

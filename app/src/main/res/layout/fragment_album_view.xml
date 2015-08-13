@@ -13,6 +13,7 @@
     <View
         android:id="@+id/overlay"
         android:layout_width="match_parent"
+        android:alpha="0"
         android:layout_height="@dimen/flexible_space_image_height"
         android:background="?attr/colorPrimary" />
 
@@ -22,43 +23,37 @@
         android:layout_height="wrap_content"
         android:background="@android:color/white" />
 
+    <FrameLayout android:id="@+id/album_info"
+        android:layout_width="match_parent"
+        android:background="@android:color/transparent"
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:paddingEnd="@dimen/activity_horizontal_margin_half"
+        android:paddingRight="@dimen/activity_horizontal_margin_half"
+        android:layout_height="75dp">
+
+        <include layout="@layout/view_album_information"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"/>
+
+    </FrameLayout>
+
     <com.github.ksoichiro.android.observablescrollview.ObservableListView
         android:id="@+id/songList"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingEnd="@dimen/margin_standard"
-        android:paddingLeft="@dimen/margin_standard"
-        android:paddingStart="@dimen/margin_standard">
-
-        <TextView
-            android:id="@+id/titleView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:gravity="center_vertical"
-            android:maxLines="1"
-            android:minHeight="?attr/actionBarSize"
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/flexible_space_image_height"
-            android:background="@android:color/transparent" />
-    </LinearLayout>
-
     <com.melnykov.fab.FloatingActionButton
-        android:id="@+id/playButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scaleType="center"
-        android:layout_gravity="left|top"
-        app:fab_colorNormal="@color/accentColor"
-        app:fab_colorPressed="@color/accentColor" />
+    android:id="@+id/playButton"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:scaleType="center"
+    android:layout_gravity="left|top"
+    app:fab_type="normal"
+    app:fab_colorNormal="@color/accentColor"
+    app:fab_colorPressed="@color/accentColor" />
+
+
+    -->
 </FrameLayout>

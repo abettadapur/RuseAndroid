@@ -5,9 +5,10 @@
     android:id="@+id/card_view"
     android:layout_gravity="center"
     android:layout_width="match_parent"
-    android:layout_height="65dp"
+    android:layout_height="55dp"
+    card_view:cardBackgroundColor="@android:color/transparent"
+    card_view:cardElevation="0dp"
     card_view:cardCornerRadius="1dp"
-    card_view:cardElevation="3dp"
     card_view:cardUseCompatPadding="true">
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
@@ -23,10 +24,10 @@
             android:layout_marginBottom="4dp"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
-            android:layout_weight="0.1"
+            android:layout_weight="0.15"
             android:layout_gravity="center_vertical"
             android:gravity="center"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:text="1 "
             android:id="@+id/numberView"/>
 
@@ -43,7 +44,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:id="@+id/titleView"
-                android:textSize="18sp"
+                android:textSize="16sp"
+                android:textColor="@android:color/black"
                 android:text="Bad Self Portraits"
                 />
 
@@ -56,10 +58,10 @@
             android:text="3:23"
             android:layout_marginEnd="55dp"
             android:layout_marginRight="55dp"
-            android:layout_weight="0.2"
+            android:layout_weight="0.15"
             android:layout_gravity="center_vertical"
             android:gravity="center"
-            android:textSize="18sp"
+            android:textSize="16sp"
             android:id="@+id/durationView"/>
 
     </LinearLayout>

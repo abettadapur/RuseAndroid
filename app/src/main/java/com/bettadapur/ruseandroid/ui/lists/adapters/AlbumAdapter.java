@@ -85,7 +85,6 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>
 
         holder.container.setOnClickListener((v)->
         {
-
             MaterialDialog dialog = new MaterialDialog.Builder(mContext).title("Loading album...").content("Loading...").progress(true, 0).show();
             ruseService.getAlbum(album.getId()).subscribe((a)->
             {

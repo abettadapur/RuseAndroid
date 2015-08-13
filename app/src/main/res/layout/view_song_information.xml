@@ -25,14 +25,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/titleView"
-            android:textSize="18sp"
+            android:textColor="@android:color/black"
+            android:textSize="16sp"
             />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/artistView"
-            android:textSize="14sp"
+            android:textSize="12sp"
             />
 
     </LinearLayout>

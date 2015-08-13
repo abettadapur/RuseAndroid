@@ -18,6 +18,7 @@ import com.bettadapur.ruseandroid.dagger.RuseModule;
 import com.bettadapur.ruseandroid.eventing.OpenAlbumRequest;
 import com.bettadapur.ruseandroid.eventing.OpenArtistRequest;
 import com.bettadapur.ruseandroid.ui.fragments.AlbumDetailFragment;
+import com.bettadapur.ruseandroid.ui.fragments.ArtistDetailFragment;
 import com.bettadapur.ruseandroid.ui.fragments.NowPlayingFragment;
 import com.bettadapur.ruseandroid.ui.fragments.SearchFragment;
 import com.hannesdorfmann.mosby.MosbyActivity;
@@ -41,7 +42,7 @@ public class MainActivity extends MosbyActivity implements SearchView.OnQueryTex
 
     private SearchFragment searchFragment;
     private NowPlayingFragment nowPlayingFragment;
-    private AlbumDetailFragment albumDetailFragment;
+    private boolean isPanelOpen = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,7 +59,6 @@ public class MainActivity extends MosbyActivity implements SearchView.OnQueryTex
         {
             searchFragment = new SearchFragment();
             nowPlayingFragment = new NowPlayingFragment();
-            albumDetailFragment = new AlbumDetailFragment();
 
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragmentContainer, searchFragment)
@@ -75,10 +75,13 @@ public class MainActivity extends MosbyActivity implements SearchView.OnQueryTex
             @Override
             public void onPanelCollapsed(View view) {
                 nowPlayingFragment.setExpanded(false);
+                isPanelOpen = false;
             }
 
             @Override
-            public void onPanelExpanded(View view) {
+            public void onPanelExpanded(View view)
+            {
+                isPanelOpen = true;
                 nowPlayingFragment.setExpanded(true);
             }
 
@@ -132,11 +135,16 @@ public class MainActivity extends MosbyActivity implements SearchView.OnQueryTex
 
     @Subscribe public void onOpenAlbum(OpenAlbumRequest request)
     {
-        //open album
+        /*if(slidingLayout.isActivated())
+            slidingLayout.setActivated(false);*/
+
+        if(slidingLayout.getPanelState()== SlidingUpPanelLayout.PanelState.EXPANDED)
+            slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
 
         runOnUiThread(()-> {
             request.getDialog().hide();
             Log.i("MainActivity", "Opening album " + request.getAlbum().getName());
+            AlbumDetailFragment albumDetailFragment = new AlbumDetailFragment();
             albumDetailFragment.updateAlbum(request.getAlbum()); //updated album
 
             //set fragment to main
@@ -152,11 +160,29 @@ public class MainActivity extends MosbyActivity implements SearchView.OnQueryTex
 
     @Subscribe public void onOpenArtist(OpenArtistRequest request)
     {
+        if(slidingLayout.getPanelState()== SlidingUpPanelLayout.PanelState.EXPANDED)
+            slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+
         runOnUiThread(()->{
             request.getDialog().hide();
             Log.i("MainActivity", "Opening artist " + request.getArtist().getName());
+            ArtistDetailFragment artistDetailFragment = new ArtistDetailFragment();
+            artistDetailFragment.updateArtist(request.getArtist());
+
+            getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
+                    .replace(R.id.fragmentContainer, artistDetailFragment)
+                    .addToBackStack("")
+                    .commit();
         });
     }
 
-
+    @Override
+    public void onBackPressed() {
+        if(slidingLayout.getPanelState()== SlidingUpPanelLayout.PanelState.EXPANDED)
+            slidingLayout.setPanelState(SlidingUpPanelLayout.PanelState.COLLAPSED);
+        else {
+            super.onBackPressed();
+        }
+    }
 }

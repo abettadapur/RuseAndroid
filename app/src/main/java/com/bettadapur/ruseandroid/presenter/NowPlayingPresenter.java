@@ -71,7 +71,9 @@ public class NowPlayingPresenter extends MvpBasePresenter<NowPlayingView>
 
     public void onPause()
     {
-        statusSubscription.unsubscribe();
-        queueSubsciption.unsubscribe();
+        if(statusSubscription!=null)
+            statusSubscription.unsubscribe();
+        if(queueSubsciption!=null)
+            queueSubsciption.unsubscribe();
     }
 }
