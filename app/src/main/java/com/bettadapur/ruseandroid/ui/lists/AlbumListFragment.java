@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import icepick.Icepick;
+import icepick.State;
 
 /**
  * Created by Alex on 8/7/2015.
@@ -35,17 +37,25 @@ public class AlbumListFragment extends MosbyFragment implements SearchChild
     ProgressBar mLoadingCircle;
 
     private AlbumAdapter mAlbumAdapter;
-    private List<Album> mAlbumList;
 
-    public AlbumListFragment()
-    {
-        mAlbumList = new ArrayList<>();
-    }
+    protected List<Album> mAlbumList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(savedInstanceState!=null)
+            mAlbumList = savedInstanceState.getParcelableArrayList("albums");
+        else
+            mAlbumList = new ArrayList<>();
+
         mAlbumAdapter = new AlbumAdapter(mAlbumList, getActivity());
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("albums", (ArrayList<Album>)mAlbumList);
     }
 
     @Override
@@ -60,6 +70,7 @@ public class AlbumListFragment extends MosbyFragment implements SearchChild
         mRecyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
         mRecyclerView.setAdapter(mAlbumAdapter);
     }
+
 
     @Override
     public void setLoading(boolean loading)

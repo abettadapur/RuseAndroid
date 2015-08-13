@@ -37,7 +37,6 @@ public class NowPlayingPresenter extends MvpBasePresenter<NowPlayingView>
                 statusSubscription = ruseService.subscribeStatus().subscribe(
                         (status)->
                         {
-                            Log.i("RuseService", "Received status message");
                             updateStatus(status);
                         },
                         (error)->
@@ -64,7 +63,6 @@ public class NowPlayingPresenter extends MvpBasePresenter<NowPlayingView>
 
     private void updateStatus(Status status)
     {
-        Log.i("NowPlayingPresenter", "Received status message: "+status.toString());
         if(isViewAttached())
             getView().updateStatus(status);
     }

@@ -152,7 +152,7 @@ public class MainActivity extends MosbyActivity implements SearchView.OnQueryTex
                     .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_out, R.anim.fade_in)
                     .replace(R.id.fragmentContainer, albumDetailFragment)
                     .addToBackStack("")
-                    .commit();
+                    .commitAllowingStateLoss();
             //toolbar.setVisibility(View.GONE);
 
         });
@@ -173,7 +173,7 @@ public class MainActivity extends MosbyActivity implements SearchView.OnQueryTex
                     .setCustomAnimations(R.anim.fade_in, R.anim.fade_out, R.anim.fade_in, R.anim.fade_out)
                     .replace(R.id.fragmentContainer, artistDetailFragment)
                     .addToBackStack("")
-                    .commit();
+                    .commitAllowingStateLoss();
         });
     }
 

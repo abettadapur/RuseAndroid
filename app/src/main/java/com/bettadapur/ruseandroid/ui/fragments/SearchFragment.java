@@ -61,6 +61,7 @@ public class SearchFragment extends MvpFragment<SearchView, SearchPresenter> imp
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mPagerAdapter = new SearchPagerAdapter(getChildFragmentManager());
         //setHasOptionsMenu(true);
     }
 
@@ -81,7 +82,7 @@ public class SearchFragment extends MvpFragment<SearchView, SearchPresenter> imp
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mPagerAdapter = new SearchPagerAdapter(getChildFragmentManager());
+
         mViewPager.setOffscreenPageLimit(2);
         mViewPager.setAdapter(mPagerAdapter);
         mTabStrip.setViewPager(mViewPager);

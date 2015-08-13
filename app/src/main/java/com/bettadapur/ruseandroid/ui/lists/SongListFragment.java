@@ -1,6 +1,7 @@
 package com.bettadapur.ruseandroid.ui.lists;
 
 import android.os.Bundle;
+import android.os.Parcel;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import com.bettadapur.ruseandroid.model.Song;
 import com.bettadapur.ruseandroid.net.RuseService;
 import com.bettadapur.ruseandroid.ui.lists.adapters.SongAdapter;
 import com.bettadapur.ruseandroid.ui.views.SearchChild;
+import com.google.gson.Gson;
 import com.hannesdorfmann.mosby.MosbyActivity;
 import com.hannesdorfmann.mosby.MosbyFragment;
 import com.squareup.otto.Bus;
@@ -24,6 +26,9 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.Bind;
+import hugo.weaving.DebugLog;
+import icepick.Icepick;
+import icepick.State;
 
 /**
  * Created by Alex on 8/7/2015.
@@ -37,14 +42,30 @@ public class SongListFragment extends MosbyFragment implements SearchChild
     ProgressBar mLoadingCircle;
 
     private SongAdapter mSongAdapter;
-    private List<Song> mSongList;
 
+    protected List<Song> mSongList;
+
+    @DebugLog
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        mSongList = new ArrayList<>();
+        if(savedInstanceState!=null)
+        {
+            mSongList = savedInstanceState.getParcelableArrayList("songs");
+        }
+        else
+        {
+            mSongList = new ArrayList<>();
+        }
+
         mSongAdapter = new SongAdapter(mSongList, getActivity());
+    }
+
+    @DebugLog
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
@@ -78,6 +99,13 @@ public class SongListFragment extends MosbyFragment implements SearchChild
             mSongList.add(s);
         }
         mSongAdapter.notifyDataSetChanged();
+    }
+
+    @DebugLog
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("songs", (ArrayList<Song>)mSongList);
     }
 
     @Override

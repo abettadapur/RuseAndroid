@@ -1,11 +1,14 @@
 package com.bettadapur.ruseandroid.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Alex on 5/3/2015.
  */
-public class Album
+public class Album implements Parcelable
 {
     private String name;
 
@@ -83,4 +86,47 @@ public class Album
     public void setSongs(Song[] songs) {
         this.songs = songs;
     }
+
+
+    public Album(Parcel in)
+    {
+        name = in.readString();
+        id = in.readString();
+        artistName = in.readString();
+        artistId = in.readString();
+        year = in.readInt();
+        artSrc = in.readString();
+        songs = in.createTypedArray(Song.CREATOR);
+    }
+
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i)
+    {
+        parcel.writeString(name);
+        parcel.writeString(id);
+        parcel.writeString(artistName);
+        parcel.writeString(artistId);
+        parcel.writeInt(year);
+        parcel.writeString(artSrc);
+        parcel.writeTypedArray(songs, 0);
+    }
+
+    @SuppressWarnings("unused")
+    public static final Parcelable.Creator<Album> CREATOR = new Parcelable.Creator<Album>() {
+        @Override
+        public Album createFromParcel(Parcel in) {
+            return new Album(in);
+        }
+
+        @Override
+        public Album[] newArray(int size) {
+            return new Album[size];
+        }
+    };
 }

@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
+import icepick.Icepick;
+import icepick.State;
 
 /**
  * Created by Alex on 8/7/2015.
@@ -37,17 +39,27 @@ public class ArtistListFragment extends MosbyFragment implements SearchChild
     ProgressBar mLoadingCircle;
 
     private ArtistAdapter mArtistAdapter;
-    private List<Artist> mArtistList;
 
-    public ArtistListFragment()
-    {
-        mArtistList = new ArrayList<>();
-    }
+    protected List<Artist> mArtistList;
+
+    public ArtistListFragment(){}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        if(savedInstanceState!=null)
+            mArtistList = savedInstanceState.getParcelableArrayList("artists");
+        else
+            mArtistList = new ArrayList<>();
+
         mArtistAdapter = new ArtistAdapter(mArtistList, getActivity());
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("artists", (ArrayList<Artist>)mArtistList);
     }
 
     @Override
